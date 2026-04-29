@@ -1,6 +1,6 @@
-Tienda Web — Migración de Base de Datos (SQLite → MongoDB)
+ # Tienda Web — Migración de Base de Datos (SQLite → MongoDB)
 
-Descripción del Proyecto
+## Descripción del Proyecto
 Este proyecto consiste en una aplicación web desarrollada con Flask que permite gestionar clientes y llevar un control de sus compras, pagos y saldos pendientes. Está orientado a pequeños comercios o emprendimientos que necesiten administrar ventas fiadas de manera simple y organizada.
 El objetivo principal del sistema es facilitar el seguimiento de las deudas de los clientes, permitiendo registrar movimientos, calcular automáticamente los saldos y visualizar alertas cuando se supera un límite de crédito definido.
 Entre sus características principales se incluyen:
