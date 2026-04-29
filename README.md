@@ -6,39 +6,59 @@ Este proyecto consiste en una aplicación web desarrollada con Flask que permite
 El objetivo principal del sistema es facilitar el seguimiento de las deudas de los clientes, permitiendo registrar movimientos, calcular automáticamente los saldos y visualizar alertas cuando se supera un límite de crédito definido.
 
 Entre sus características principales se incluyen:
+
 	• Registro de clientes
+	
 	• Historial de compras y pagos
+	
 	• Cálculo automático de saldo por cliente
+	
 	• Advertencia visual cuando el crédito supera los $500 ARS
+	
 	• Búsqueda de clientes por nombre
+	
 	• Eliminación de clientes y sus movimientos
+	
 	• Interfaz sencilla y amigable
 	
 Además, este proyecto incorpora una adaptación de su sistema de persistencia de datos, migrando desde una base de datos relacional SQLite hacia una solución NoSQL basada en MongoDB.
 
 ## Objetivos
 	• Reemplazar SQLite como motor de base de datos.
+	
 	• Implementar MongoDB como sistema de almacenamiento principal.
+	
 	• Adaptar los modelos y la lógica de acceso a datos.
+	
 	• Mantener la funcionalidad original del sistema.
+	
 	• Evaluar ventajas y desafíos del cambio a NoSQL.
 
 ##  Tecnologías Utilizadas
+
 	• Python
+	
 	• Flask
+	
 	• SQLite (original)
+	
 	• MongoDB (nuevo)
+	
 	• PyMongo / MongoEngine (según implementación)
 
 ##  Requisitos Previos
 Antes de ejecutar el proyecto, asegurate de tener instalado:
 	• Python 3.8 o superior
+	
 	• pip (gestor de paquetes)
+	
 	• MongoDB (local o remoto)
 	
 ## Extensiones recomendadas (VS Code)
 	• Python
+	
 	• MongoDB for VS Code
+	
 	• Pylance
 
 ## Instalación
@@ -86,13 +106,20 @@ http://localhost:5000
 
 ## Estructura del Proyecto
 tienda_web/
+
 │
 ├── app.py
+
 ├── models/
+
 ├── routes/
+
 ├── templates/
+
 ├── static/
+
 ├── requirements.txt
+
 └── README.md
 
 
