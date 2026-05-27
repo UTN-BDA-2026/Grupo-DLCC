@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tienda Web</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <h1>Tienda Web</h1>
+    <hr>
+    <nav>
+    <a href="{{ url_for('lista_clientes') }}">🏠 Inicio</a>
+    </nav>
+
+    <br>
+    {% block content %}{% endblock %}
+</body>
+
+</html>
