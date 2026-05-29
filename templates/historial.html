@@ -3,8 +3,11 @@
 <h2>Historial de {{ cliente.nombre }}</h2>
 <p>Saldo Actual: ${{ cliente.saldo_total }}</p>
 {% if cliente.saldo_total > 500 %}
-<p class="alert">⚠️ Alcanzó el límite de crédito ⚠️</p>
+<p class="alert">⚠️ Cliente con límite de crédito alcanzado ⚠️</p>
 {% endif %}
+
+{% if movimientos %}
+
 <table>
     <tr>
         <th>Fecha</th>
@@ -18,7 +21,11 @@
         <td>${{ m.monto }}</td>
     </tr>
     {% endfor %}
+
 </table>
+{% else %}
+<p>No hay movimientos registrados para este cliente.</p>
+{% endif %}
 <a href="{{ url_for('nuevo_movimiento', cliente_id=cliente._id) }}">Agregar movimiento</a>
 <br><br>
 
