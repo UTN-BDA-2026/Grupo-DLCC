@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Historial de {{ cliente.nombre }}</h2>
+<p>Saldo Actual: ${{ cliente.saldo_total }}</p>
+{% if cliente.saldo_total > 500 %}
+<p class="alert">⚠️ Alcanzó el límite de crédito ⚠️</p>
+{% endif %}
+<table>
+    <tr>
+        <th>Fecha</th>
+        <th>Concepto</th>
+        <th>Monto</th>
+    </tr>
+    {% for m in movimientos %}
+    <tr>
+        <td>{{ m.fecha }}</td>
+        <td>{{ m.concepto }}</td>
+        <td>${{ m.monto }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{{ url_for('nuevo_movimiento', cliente_id=cliente._id) }}">Agregar movimiento</a>
+<br><br>
+
+<a href="{{ url_for('lista_clientes') }}">
+    ⬅ Volver al menú principal
+</a>
+{% endblock %}
