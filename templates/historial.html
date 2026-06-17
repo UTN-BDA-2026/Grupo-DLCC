@@ -3,7 +3,7 @@
 <h2>Historial de {{ cliente.nombre }}</h2>
 <p>Saldo Actual: ${{ cliente.saldo_total }}</p>
 {% if cliente.saldo_total > 500 %}
-<p class="alert">⚠️ Cliente con límite de crédito alcanzado ⚠️</p>
+<p class="alert"> Cliente con límite de crédito alcanzado </p>
 {% endif %}
 
 {% if movimientos %}
