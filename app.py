@@ -9,6 +9,7 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY")
 
 # CONEXIÓN MONGODB
 MONGO_URI = os.getenv("MONGO_URI")
@@ -35,8 +36,6 @@ def login_required(f):
     return decorated_function
 
 # RUTAS
-
-
 @app.route("/")
 @login_required
 def lista_clientes():
@@ -166,8 +165,6 @@ def buscar_cliente():
     return render_template("clientes.html", clientes=clientes)
 
 # Rutas de autenticación
-
-
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
     if request.method == "POST":
