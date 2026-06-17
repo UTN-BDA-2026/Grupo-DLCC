@@ -1,31 +1,73 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <h2>Clientes</h2>
 <h3>Buscar cliente</h3>
 <form method="POST" action="{{ url_for('buscar_cliente') }}">
-    <input type="text" name="nombre" placeholder="Nombre a buscar" required>
-    <button type="submit">Buscar 🔍</button>
+  <input type="text" name="nombre" placeholder="Nombre a buscar" required />
+  <button type="submit">Buscar</button>
 </form>
 
-<ul>
-    {% for c in clientes %}
-    <li>
-        <a href="{{ url_for('historial', cliente_id=c.id) }}">{{ c.nombre }}</a>
-        - Saldo: ${{ c.saldo_total }}
+{% if busqueda %}
+<br />
+<a
+  href="{{ url_for('lista_clientes') }}"
+  style="
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: black;
+    border-radius: 4px;
+  "
+>
+  Volver a ver todos los clientes
+</a>
+{% endif %}
 
-        <!-- Botón de eliminar -->
-        <form method="POST" action="{{ url_for('eliminar_cliente', cliente_id=c.id) }}" style="display:inline;">
-            <button type="submit" onclick="return confirm('¿Seguro que quieres eliminar este cliente?')">
-                Eliminar ❌
-            </button>
-        </form>
-    </li>
-    {% endfor %}
+<ul>
+  {% for c in clientes %}
+  <li>
+    <a href="{{ url_for('historial', cliente_id=c._id) }}">{{ c.nombre }}</a>
+    - Saldo: ${{ c.saldo_total }}
+
+    <form
+      method="POST"
+      action="{{ url_for('eliminar_cliente', cliente_id=c._id) }}"
+      style="display: inline"
+    >
+      <button
+        type="submit"
+        onclick="return confirm('¿Seguro que quieres eliminar este cliente?');"
+      >
+        Eliminar
+      </button>
+    </form>
+  </li>
+  {% endfor %}
 </ul>
 
 <h3>Agregar nuevo cliente</h3>
 <form method="POST" action="{{ url_for('agregar_cliente') }}">
-    <input type="text" name="nombre" placeholder="Nombre del cliente" required>
-    <button type="submit">Agregar</button>
+  <input type="text" name="nombre" placeholder="Nombre del cliente" required />
+  <button type="submit">Agregar</button>
 </form>
+
+<div style="text-align: right; margin: 10px 20px">
+  <a href="/logout">
+    <button
+      style="
+        padding: 10px 18px;
+        font-size: 14px;
+        cursor: pointer;
+        background-color: #c62828;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+      "
+    >
+      Cerrar Sesión
+    </button>
+  </a>
+</div>
 {% endblock %}
