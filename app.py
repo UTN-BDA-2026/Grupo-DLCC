@@ -18,6 +18,9 @@ db = client[DB_NAME]
 clientes_collection = db["clientes"]
 movimientos_collection = db["movimientos"]
 
+#indices
+clientes_collection.create_index("nombre")
+movimientos_collection.create_index("cliente_id")
 
 # RUTAS
 @app.route("/")
