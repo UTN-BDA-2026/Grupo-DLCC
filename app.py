@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 import os
 
 load_dotenv()
@@ -22,14 +24,25 @@ movimientos_collection = db["movimientos"]
 clientes_collection.create_index("nombre")
 movimientos_collection.create_index("cliente_id")
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # Si el usuario no tiene la sesión activa en su navegador, rebota al login
+        if "usuario" not in session:
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated_function
+
 # RUTAS
 @app.route("/")
+@login_required
 def lista_clientes():
     clientes = list(clientes_collection.find())
     return render_template("clientes.html", clientes=clientes)
 
 
 @app.route("/agregar_cliente", methods=["POST"])
+@login_required
 def agregar_cliente():
 
     nombre = request.form["nombre"]
@@ -49,6 +62,7 @@ def agregar_cliente():
 
 
 @app.route("/cliente/<cliente_id>")
+@login_required
 def historial(cliente_id):
 
     cliente = clientes_collection.find_one({
@@ -69,6 +83,7 @@ def historial(cliente_id):
 
 
 @app.route("/nuevo/<cliente_id>", methods=["GET", "POST"])
+@login_required
 def nuevo_movimiento(cliente_id):
 
     if request.method == "POST":
@@ -116,6 +131,7 @@ def nuevo_movimiento(cliente_id):
 
 
 @app.route("/eliminar/<cliente_id>", methods=["POST"])
+@login_required
 def eliminar_cliente(cliente_id):
 
     movimientos_collection.delete_many({
@@ -130,6 +146,7 @@ def eliminar_cliente(cliente_id):
 
 
 @app.route("/buscar", methods=["POST"])
+@login_required
 def buscar_cliente():
 
     nombre = request.form["nombre"]
