@@ -233,6 +233,22 @@ def login():
 
     return render_template("login.html")
 
-
+@app.route("/logout")
+def logout():
+    session.clear()
+    
+    return f'''
+    <div style="font-family: Arial, sans-serif; margin: 40px; text-align: center;">
+        <h2>Cerraste sesión de forma segura.</h2>
+        <p style="color: #666;">Ya no tenés acceso a las pantallas de clientes.</p>
+        <br><br>
+        
+        <a href="{url_for('login')}">
+            <button style="padding: 12px 24px; font-size: 16px; cursor: pointer; background-color: #0288d1; color: white; border: none; border-radius: 5px; font-weight: bold;">
+                Volver a Iniciar Sesión
+            </button>
+        </a>
+    </div>
+    '''
 if __name__ == "__main__":
     app.run(debug=True)
