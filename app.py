@@ -20,9 +20,10 @@ db = client[DB_NAME]
 clientes_collection = db["clientes"]
 movimientos_collection = db["movimientos"]
 
-#indices
+# indices
 clientes_collection.create_index("nombre")
 movimientos_collection.create_index("cliente_id")
+
 
 def login_required(f):
     @wraps(f)
@@ -34,6 +35,8 @@ def login_required(f):
     return decorated_function
 
 # RUTAS
+
+
 @app.route("/")
 @login_required
 def lista_clientes():
@@ -161,6 +164,44 @@ def buscar_cliente():
     )
 
     return render_template("clientes.html", clientes=clientes)
+
+# Rutas de autenticación
+
+
+@app.route("/registro", methods=["GET", "POST"])
+def registro():
+    if request.method == "POST":
+        username = request.form["username"].strip()
+        password = request.form["password"]
+
+        usuario_existente = db["usuarios"].find_one({"username": username})
+        if usuario_existente:
+            return "El usuario ya existe. Volvé atrás e intentá con otro."
+
+        # Encriptamos la contraseña
+        password_encriptada = generate_password_hash(
+            password, method="pbkdf2:sha256")
+
+        db["usuarios"].insert_one({
+            "username": username,
+            "password": password_encriptada
+        })
+
+        return f'''
+        <div style="font-family: Arial, sans-serif; margin: 40px; text-align: center;">
+            <h2> ¡Usuario registrado con éxito!</h2>
+            <p style="color: #666;">Ya podés ingresar al sistema con tu nueva cuenta.</p>
+            <br><br>
+            
+            <a href="{url_for('login')}">
+                <button style="padding: 12px 24px; font-size: 16px; cursor: pointer; background-color: #0288d1; color: white; border: none; border-radius: 5px; font-weight: bold;">
+                      Ir al Login / Iniciar Sesión
+                </button>
+            </a>
+        </div>
+        '''
+
+    return render_template("registro.html")
 
 
 if __name__ == "__main__":
