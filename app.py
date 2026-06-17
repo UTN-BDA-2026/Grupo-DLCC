@@ -204,5 +204,35 @@ def registro():
     return render_template("registro.html")
 
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"].strip()
+        password = request.form["password"]
+
+        usuario = db["usuarios"].find_one({"username": username})
+
+        if usuario and check_password_hash(usuario["password"], password):
+            session["usuario"] = username
+
+            # SOLO el botón para avanzar al Home
+            return f'''
+            <div style="font-family: Arial, sans-serif; margin: 40px; text-align: center;">
+                <h2>  ¡Hola {username}! Iniciaste sesión correctamente.</h2>
+                <p style="color: #666;">El sistema ya te reconoce de forma segura.</p>
+                <br><br>
+                <a href="{url_for('lista_clientes')}">
+                    <button style="padding: 12px 24px; font-size: 16px; cursor: pointer; background-color: #2e7d32; color: white; border: none; border-radius: 5px; font-weight: bold;">
+                          Ir a la Página Principal
+                    </button>
+                </a>
+            </div>
+            '''
+
+        return " Usuario o contraseña incorrectos. Volvé a intentar."
+
+    return render_template("login.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
