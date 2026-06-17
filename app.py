@@ -72,22 +72,43 @@ def historial(cliente_id):
 def nuevo_movimiento(cliente_id):
 
     if request.method == "POST":
-
         fecha = request.form["fecha"]
         concepto = request.form["concepto"]
         monto = float(request.form["monto"])
 
-        movimientos_collection.insert_one({
-            "cliente_id": cliente_id,
-            "fecha": fecha,
-            "concepto": concepto,
-            "monto": monto
-        })
+        # 1. Iniciamos la sesión en el SGBD
+        with client.start_session() as session:
 
-        clientes_collection.update_one(
-            {"_id": ObjectId(cliente_id)},
-            {"$inc": {"saldo_total": monto}}
-        )
+            # 2. [BEGIN TRANSACTION] - Inicio de la unidad de trabajo (Filas 3 y 4 del PDF)
+            session.start_transaction()
+
+            # ... dentro de tu ruta nuevo_movimiento, en el bloque try:
+
+            try:
+                # [Operación 1] - Se inserta el movimiento
+                movimientos_collection.insert_one({
+                    "cliente_id": cliente_id,
+                    "fecha": fecha,
+                    "concepto": concepto,
+                    "monto": monto
+                }, session=session)
+
+                # raise Exception("Simulación de caida de internet")  # Simulamos un error para probar el ROLLBACK
+
+                # [Operación 2] - Modificar el saldo (A esto nunca va a llegar)
+                clientes_collection.update_one(
+                    {"_id": ObjectId(cliente_id)},
+                    {"$inc": {"saldo_total": monto}},
+                    session=session
+                )
+
+                session.commit_transaction()
+
+            except Exception as e:
+                # 4. [ROLLBACK] - Si ocurre un fallo, deshacemos y revertimos todo (Fila 3 del PDF)
+                session.abort_transaction()
+                print(f"Fallo detectado. Se ejecutó ROLLBACK: {e}")
+                return "Error interno, la transacción fue abortada.", 500
 
         return redirect(url_for("historial", cliente_id=cliente_id))
 
