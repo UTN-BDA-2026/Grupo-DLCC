@@ -1,35 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Historial de {{ cliente.nombre }}</h2>
-<p>Saldo Actual: ${{ cliente.saldo_total }}</p>
+<div class="page-hero">
+    <div>
+        <h2 class="page-title">Historial de {{ cliente.nombre }}</h2>
+    </div>
+    <span class="badge {% if cliente.saldo_total > 500 %}badge-danger{% else %}badge-success{% endif %}">
+        Saldo actual: ${{ cliente.saldo_total }}
+    </span>
+</div>
+
 {% if cliente.saldo_total > 500 %}
-<p class="alert"> Cliente con límite de crédito alcanzado </p>
+<p class="alert">Cliente con límite de crédito alcanzado.</p>
 {% endif %}
 
-{% if movimientos %}
+<div class="card stack">
+    {% if movimientos %}
+    <div class="table-wrap">
+        <table>
+            <tr>
+                <th>Fecha</th>
+                <th>Concepto</th>
+                <th>Monto</th>
+            </tr>
+            {% for m in movimientos %}
+            <tr>
+                <td>{{ m.fecha }}</td>
+                <td>{{ m.concepto }}</td>
+                <td>${{ m.monto }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% else %}
+    <p>No hay movimientos registrados para este cliente.</p>
+    {% endif %}
 
-<table>
-    <tr>
-        <th>Fecha</th>
-        <th>Concepto</th>
-        <th>Monto</th>
-    </tr>
-    {% for m in movimientos %}
-    <tr>
-        <td>{{ m.fecha }}</td>
-        <td>{{ m.concepto }}</td>
-        <td>${{ m.monto }}</td>
-    </tr>
-    {% endfor %}
-
-</table>
-{% else %}
-<p>No hay movimientos registrados para este cliente.</p>
-{% endif %}
-<a href="{{ url_for('nuevo_movimiento', cliente_id=cliente._id) }}">Agregar movimiento</a>
-<br><br>
-
-<a href="{{ url_for('lista_clientes') }}">
-    ⬅ Volver al menú principal
-</a>
+    <div class="actions-row">
+        <a class="nav-link" href="{{ url_for('nuevo_movimiento', cliente_id=cliente._id) }}">Agregar movimiento</a>
+        <a class="nav-link" href="{{ url_for('lista_clientes') }}">Volver al menú principal</a>
+    </div>
+</div>
 {% endblock %}

@@ -2,27 +2,30 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Tienda Katy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <h2>Control de Acceso - Iniciar Sesión</h2>
-    
-    <form method="POST" action="/login">
-        <label>Nombre de Usuario:</label><br>
-        <input type="text" name="username" required><br><br>
-        
-        <label>Contraseña:</label><br>
-        <input type="password" name="password" required><br><br>
-        
-        <button type="submit">Ingresar al Sistema</button>
-    </form>
-    <div style="margin-top: 25px; font-family: Arial, sans-serif;">
-    <p style="color: #666; margin-bottom: 8px; font-size: 14px;">¿Sos nuevo en el sistema?</p>
-    <a href="/registro">
-        <button type="button" style="padding: 10px 20px; font-size: 14px; cursor: pointer; background-color: #0288d1; color: white; border: none; border-radius: 5px; font-weight: bold;">
-            Crear una Cuenta / Registrarse
-        </button>
-    </a>
-</div>
+<body class="auth-page">
+    <section class="card auth-card">
+        <div class="brand" style="margin-bottom: 20px;">
+            <h1 class="brand__title">Tienda Web</h1>
+        </div>
+
+        <h2>Control de Acceso</h2>
+
+        {% if error_message %}
+        <p class="alert">{{ error_message }}</p>
+        {% endif %}
+
+        <form method="POST" action="/login">
+            <input type="text" name="username" placeholder="Nombre de usuario" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit">Ingresar al Sistema</button>
+        </form>
+
+        <p class="footer-note">¿Sos nuevo en el sistema?</p>
+        <a class="nav-link" href="/registro">Crear una cuenta / Registrarse</a>
+    </section>
 </body>
 </html>
