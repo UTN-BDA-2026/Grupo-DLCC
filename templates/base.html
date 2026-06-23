@@ -2,19 +2,29 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda Web</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
-    <h1>Tienda Web</h1>
-    <hr>
-    <nav>
-    <a href="{{ url_for('lista_clientes') }}"> Inicio</a>
-    </nav>
+<body class="{% block body_class %}app-page{% endblock %}">
+    <header class="site-header">
+        <div class="site-header__inner">
+            <div class="brand">
+                <h1 class="brand__title">Tienda Web</h1>
+            </div>
+            <nav class="nav-links">
+                <a class="nav-link" href="{{ url_for('lista_clientes') }}">Inicio</a>
+                <a class="nav-link" href="{{ url_for('registro') }}">Registro</a>
+                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+            </nav>
+        </div>
+    </header>
 
-    <br>
-    {% block content %}{% endblock %}
+    <main class="page-shell">
+        {% block content %}{% endblock %}
+    </main>
 </body>
 
 </html>

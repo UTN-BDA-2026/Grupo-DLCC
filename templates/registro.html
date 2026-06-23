@@ -2,19 +2,27 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Tienda Katy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <h2>Registro de Nuevo Usuario</h2>
-    
-    <form method="POST" action="/registro">
-        <label>Elegí un nombre de Usuario:</label><br>
-        <input type="text" name="username" required><br><br>
-        
-        <label>Contraseña:</label><br>
-        <input type="password" name="password" required><br><br>
-        
-        <button type="submit">Crear Cuenta Seguro</button>
-    </form>
+<body class="auth-page">
+    <section class="card auth-card">
+        <div class="brand" style="margin-bottom: 20px;">
+            <h1 class="brand__title">Tienda Web</h1>
+        </div>
+
+        <h2>Registro de Nuevo Usuario</h2>
+
+        {% if error_message %}
+        <p class="alert">{{ error_message }}</p>
+        {% endif %}
+
+        <form method="POST" action="/registro">
+            <input type="text" name="username" placeholder="Nombre de usuario" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit">Crear cuenta</button>
+        </form>
+    </section>
 </body>
 </html>

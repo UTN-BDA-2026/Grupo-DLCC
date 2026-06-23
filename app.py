@@ -125,7 +125,14 @@ def nuevo_movimiento(cliente_id):
                 # 4. [ROLLBACK] - Si ocurre un fallo, deshacemos y revertimos todo (Fila 3 del PDF)
                 session.abort_transaction()
                 print(f"Fallo detectado. Se ejecutó ROLLBACK: {e}")
-                return "Error interno, la transacción fue abortada.", 500
+                return render_template(
+                    "auth_result.html",
+                    title="Error interno",
+                    message="La transacción fue abortada y no se guardaron cambios.",
+                    button_text="Volver al historial",
+                    button_url=url_for("historial", cliente_id=cliente_id),
+                    button_class="btn-secondary"
+                ), 500
 
         return redirect(url_for("historial", cliente_id=cliente_id))
 
@@ -162,7 +169,7 @@ def buscar_cliente():
         })
     )
 
-    return render_template("clientes.html", clientes=clientes)
+    return render_template("clientes.html", clientes=clientes, busqueda=True)
 
 # Rutas de autenticación
 @app.route("/registro", methods=["GET", "POST"])
@@ -173,7 +180,10 @@ def registro():
 
         usuario_existente = db["usuarios"].find_one({"username": username})
         if usuario_existente:
-            return "El usuario ya existe. Volvé atrás e intentá con otro."
+            return render_template(
+                "registro.html",
+                error_message="El usuario ya existe. Probá con otro nombre."
+            )
 
         # Encriptamos la contraseña
         password_encriptada = generate_password_hash(
@@ -184,19 +194,14 @@ def registro():
             "password": password_encriptada
         })
 
-        return f'''
-        <div style="font-family: Arial, sans-serif; margin: 40px; text-align: center;">
-            <h2> ¡Usuario registrado con éxito!</h2>
-            <p style="color: #666;">Ya podés ingresar al sistema con tu nueva cuenta.</p>
-            <br><br>
-            
-            <a href="{url_for('login')}">
-                <button style="padding: 12px 24px; font-size: 16px; cursor: pointer; background-color: #0288d1; color: white; border: none; border-radius: 5px; font-weight: bold;">
-                      Ir al Login / Iniciar Sesión
-                </button>
-            </a>
-        </div>
-        '''
+        return render_template(
+            "auth_result.html",
+            title="¡Usuario registrado con éxito!",
+            message="Ya podés ingresar al sistema con tu nueva cuenta.",
+            button_text="Ir al login / iniciar sesión",
+            button_url=url_for("login"),
+            button_class="btn-primary"
+        )
 
     return render_template("registro.html")
 
@@ -212,40 +217,33 @@ def login():
         if usuario and check_password_hash(usuario["password"], password):
             session["usuario"] = username
 
-            # SOLO el botón para avanzar al Home
-            return f'''
-            <div style="font-family: Arial, sans-serif; margin: 40px; text-align: center;">
-                <h2>  ¡Hola {username}! Iniciaste sesión correctamente.</h2>
-                <p style="color: #666;">El sistema ya te reconoce de forma segura.</p>
-                <br><br>
-                <a href="{url_for('lista_clientes')}">
-                    <button style="padding: 12px 24px; font-size: 16px; cursor: pointer; background-color: #2e7d32; color: white; border: none; border-radius: 5px; font-weight: bold;">
-                          Ir a la Página Principal
-                    </button>
-                </a>
-            </div>
-            '''
+            return render_template(
+                "auth_result.html",
+                title=f"¡Hola {username}! Iniciaste sesión correctamente.",
+                message="El sistema ya te reconoce de forma segura.",
+                button_text="Ir a la página principal",
+                button_url=url_for("lista_clientes"),
+                button_class="btn-success"
+            )
 
-        return " Usuario o contraseña incorrectos. Volvé a intentar."
+        return render_template(
+            "login.html",
+            error_message="Usuario o contraseña incorrectos. Volvé a intentar."
+        )
 
     return render_template("login.html")
 
 @app.route("/logout")
 def logout():
     session.clear()
-    
-    return f'''
-    <div style="font-family: Arial, sans-serif; margin: 40px; text-align: center;">
-        <h2>Cerraste sesión de forma segura.</h2>
-        <p style="color: #666;">Ya no tenés acceso a las pantallas de clientes.</p>
-        <br><br>
-        
-        <a href="{url_for('login')}">
-            <button style="padding: 12px 24px; font-size: 16px; cursor: pointer; background-color: #0288d1; color: white; border: none; border-radius: 5px; font-weight: bold;">
-                Volver a Iniciar Sesión
-            </button>
-        </a>
-    </div>
-    '''
+
+    return render_template(
+        "auth_result.html",
+        title="Cerraste sesión de forma segura.",
+        message="Ya no tenés acceso a las pantallas de clientes.",
+        button_text="Volver a iniciar sesión",
+        button_url=url_for("login"),
+        button_class="btn-secondary"
+    )
 if __name__ == "__main__":
     app.run(debug=True)
