@@ -1,66 +1,146 @@
- # Tienda Web — MongoDB 
+# Tienda Web — MongoDB
 
 ## Instalación
-	1. Clonar el repositorio:
-		git clone https://github.com/UTN-BDA-2026/Grupo-DLCC.git
-		cd GRUPO-DLCC 
-	2. Crear entorno virtual:
-		python -m venv venv
-	3. Activar entorno virtual:
-		• Windows:
-			venv\Scripts\activate
-		•Linux/Mac:
-			source venv/bin/activate
-	4. Instalar dependencias:
-		pip install -r requirements.txt o dentro del entorno poner: pip install flask pymongo python-dotenv
+
+1. Clonar el repositorio:
+
+```bash
+git clone https://github.com/UTN-BDA-2026/Grupo-DLCC.git
+cd Grupo-DLCC
+```
+
+2. Crear entorno virtual:
+
+```bash
+python -m venv venv
+```
+
+3. Activar entorno virtual:
+
+Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Linux/Mac:
+
+```bash
+source venv/bin/activate
+```
+
+4. Instalar dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+En caso de no contar con el archivo `requirements.txt`, también se pueden instalar manualmente las dependencias principales:
+
+```bash
+pip install flask pymongo python-dotenv
+```
+
+---
+
+## Cómo crear la Base de Datos en MongoDB Atlas y obtener la URL
+
+El proyecto utiliza MongoDB como sistema de persistencia principal. Cada integrante debe configurar su propia base de datos, ya sea localmente o en la nube con MongoDB Atlas.
+
+Si no tenés una base de datos creada en MongoDB Atlas, seguí estos pasos:
+
+1. Entrá a MongoDB Atlas y creá una cuenta gratuita.
+
+2. Creá un clúster gratuito:
+
+   - Hacé clic en **Create**.
+   - Elegí la opción gratuita **M0**.
+   - Seleccioná un proveedor, por ejemplo AWS.
+   - Elegí una región cercana.
+   - Hacé clic en **Create Cluster**.
+
+3. Creá un usuario para la base de datos:
+
+   - Entrá a la sección **Database Access**.
+   - Creá un usuario y una contraseña.
+   - Guardá estos datos, ya que se usarán para completar la URL de conexión.
+
+4. Permití el acceso desde tu IP:
+
+   - Entrá a la sección **Network Access**.
+   - Agregá tu dirección IP actual.
+   - Para entornos de prueba también se puede usar la opción **Allow Access from Anywhere**, aunque no es recomendable para producción.
+
+5. Obtené la URL de conexión:
+
+   - Volvé a la sección **Database**.
+   - Hacé clic en **Connect**.
+   - Seleccioná **Drivers** o **Connect your application**.
+   - Elegí Python como lenguaje.
+   - Copiá la URL que empieza con `mongodb+srv://`.
+   - Reemplazá `<password>` por la contraseña del usuario de base de datos creado anteriormente.
+
+Esa URL será utilizada como valor de `MONGO_URI` en el archivo `.env`.
+
+---
 
 ## Configuración de la Base de Datos
-El proyecto utiliza MongoDB como sistema de persistencia principal. Al ser un entorno de desarrollo, cada usuario debe configurar su propia instancia de base de datos (ya sea local y en la nube con MongoDB Atlas).
- 1. Instalar mongoDB compass para poder visualizar la base de datos
- 2.En la raiz del proyecto. Crear un archivo .env con las siguientes lineas: 
- 		MONGO_URI=mongodb+srv://<TU_USUARIO>:<TU_CONTRASEÑA>@<TU_CLUSTER>.mongodb.net/ (esto te lo da mongoDB atlas)
-		DB_NAME=tienda_katy
-		SECRET_KEY=dlcc
- 3. En MongoDB Compass, iniciá una nueva conexión utilizando esa misma URL para verificar que el acceso sea correcto.
- 4. ya podes ejecutar la aplicacion una vez creado el entorno virtual con las librerias. Ejecutas python app.py dentro del entorno virtual
- 
- ## Cómo crear tu Base de Datos en MongoDB Atlas y obtener la URL (ESTA PARTE CAMBIAR A MAS SENCILLO)
 
-Si no tenés una base de datos creada en la nube, seguí estos pasos para armar una gratis en MongoDB Atlas:
+1. Instalar MongoDB Compass para poder visualizar la base de datos.
 
-1. **Registrarse:** Entrá a MongoDB Atlas y create una cuenta gratuita.
+2. En la raíz del proyecto, crear un archivo llamado `.env`.
 
-2. **Crear el Clúster Gratuito:**
-   * Una vez adentro del panel, hacé clic en **Create** (Crear un clúster).
-   * Elegí la opción gratuita llamada **M0**.
-   * Seleccioná el proveedor (por ejemplo, *AWS*) y la región más cercana (ej. *N. Virginia* o *São Paulo*).
-   * Hacé clic en **Create Cluster**.
+3. Dentro del archivo `.env`, agregar las siguientes variables:
 
-3. **Configurar las credenciales de seguridad (¡Importante!):**
-   * **Usuario de la Base de Datos (Database Access):** El sistema te va a pedir crear un usuario y una contraseña. Anotalos bien, porque estas son las credenciales que vas a poner en tu archivo `.env` (no es la contraseña con la que iniciás sesión en la página, es una exclusiva para la base de datos).
-   * **Permitir accesos (Network Access):** En la sección de red, agregá una regla de IP. Para que el proyecto funcione desde cualquier lado (tu casa, la facultad, etc.), elegí la opción **"Allow Access from Anywhere"** (permitir acceso desde cualquier lugar, IP `0.0.0.0/0`).
+```env
+MONGO_URI=mongodb+srv://<TU_USUARIO>:<TU_CONTRASEÑA>@<TU_CLUSTER>.mongodb.net/
+DB_NAME=tienda_katy
+SECRET_KEY=<TU_CLAVE_SECRETA>
+```
 
-4. **Obtener la URL de conexión (MONGO_URI):**
-   * Volvé a la pestaña **Database** en el menú de la izquierda.
-   * En tu clúster, hacé clic en el botón **Connect**.
-   * Seleccioná la opción **Drivers** (o *Connect your application*).
-   * Elegí el lenguaje **Python** (la versión que te ponga por defecto está bien).
-   * Abajo te va a aparecer un texto largo que empieza con `mongodb+srv://...`. ¡Esa es tu **MONGO_URI**!
-   * Copiala completa y pegala en tu archivo `.env`, reemplazando `<password>` por la contraseña real que creaste en el paso 3.
+4. Abrir MongoDB Compass y crear una nueva conexión usando la misma URL definida en `MONGO_URI`.
 
- ## Backup y Restore
- Para verificar el correcto funcionamiento de los scripts de respaldo local ante una eventual pérdida de datos, seguí estos pasos:
+5. Verificar que la conexión sea correcta.
 
- 1. Crear un respaldo: Con la aplicación corriendo o detenida, ejecutá en la terminal: python backup.py. Esto generará de forma automática una carpeta con los archivos JSON de respaldo de las colecciones.
+6. Ejecutar la aplicación desde el entorno virtual:
 
- 2. Simular pérdida de datos: Entrá a MongoDB Compass y eliminá manualmente un cliente o un movimiento de la base de datos.
+```bash
+python app.py
+```
 
- 3. Restaurar el estado anterior: Ejecutá en la terminal: python restore.py. Refrescá la vista en MongoDB Compass y comprobarás que toda la información eliminada se ha restaurado.
+---
+
+## Backup y Restore
+
+Para verificar el correcto funcionamiento de los scripts de respaldo local ante una eventual pérdida de datos, seguí estos pasos:
+
+1. Crear un respaldo:
+
+```bash
+python backup.py
+```
+
+Esto generará automáticamente una carpeta con los archivos JSON de respaldo de las colecciones.
+
+2. Simular pérdida de datos:
+
+Entrá a MongoDB Compass y eliminá manualmente un cliente o un movimiento de la base de datos.
+
+3. Restaurar el estado anterior:
+
+```bash
+python restore.py
+```
+
+Luego, refrescá la vista en MongoDB Compass y verificá que la información eliminada se haya restaurado.
+
+---
 
 ## Estructura del Proyecto
+
+```text
 tienda_web/
 
-│
 ├── app.py
 ├── .env
 ├── static/
@@ -70,18 +150,30 @@ tienda_web/
 │   ├── clientes.html
 │   ├── historial.html
 │   └── nuevo.html
-│──backup.py
-│──restore.py
-│──requeriments.txt
-│──mongodump.exe
-│──mongorestore.exe
-│──.gitignore
+├── backup.py
+├── restore.py
+├── requirements.txt
+├── mongodump.exe
+├── mongorestore.exe
+├── .gitignore
 └── README.md
+```
+
+---
 
 ## Posibles Mejoras
-	• Implementar backups automáticos.
-	• Crear más índices para optimizar búsquedas.
-	• Optimizar consultas para mejorar rendimiento
+
+- Implementar backups automáticos.
+- Crear más índices para optimizar búsquedas.
+- Optimizar consultas para mejorar rendimiento.
+
+---
 
 ## Autores
-	• Equipo de trabajo: Campos Agustín, Cantón Leandro, Carribero Delfina, Vargas Loana.
+
+Equipo de trabajo:
+
+- Campos Agustín
+- Cantón Leandro
+- Carribero Delfina
+- Vargas Loana
