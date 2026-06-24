@@ -93,14 +93,8 @@ def nuevo_movimiento(cliente_id):
         concepto = request.form["concepto"]
         monto = float(request.form["monto"])
 
-        # 1. Iniciamos la sesión en el SGBD
         with client.start_session() as session:
-
-            # 2. [BEGIN TRANSACTION] - Inicio de la unidad de trabajo (Filas 3 y 4 del PDF)
             session.start_transaction()
-
-            # ... dentro de tu ruta nuevo_movimiento, en el bloque try:
-
             try:
                 # [Operación 1] - Se inserta el movimiento
                 movimientos_collection.insert_one({
@@ -122,7 +116,7 @@ def nuevo_movimiento(cliente_id):
                 session.commit_transaction()
 
             except Exception as e:
-                # 4. [ROLLBACK] - Si ocurre un fallo, deshacemos y revertimos todo (Fila 3 del PDF)
+                #[ROLLBACK] - Si ocurre un fallo, deshacemos y revertimos todo 
                 session.abort_transaction()
                 print(f"Fallo detectado. Se ejecutó ROLLBACK: {e}")
                 return render_template(
